@@ -40,7 +40,7 @@ public class DatabaseExample {
                 String pw = rs.getString("Password");
 
                 //Display values
-                System.out.println("Prof: " + user + " " + fn + " " + ln + " " + pw);
+                System.out.println("Prof- username: " + user + " FName: " + fn + " Lname: " + ln + " Pass: " + pw);
             }
             //Student Table
             sql = "SELECT StudentID, PassageNum, TimePassage FROM Student_Table";
@@ -53,7 +53,7 @@ public class DatabaseExample {
                 Time tPassage = rs.getTime("TimePassage");
 
                 //Display values
-                System.out.println("Student: " + sID + " " + passageNum + " " + tPassage);
+                System.out.println("Student- ID: " + sID + " PassNum: " + passageNum + " Time: " + tPassage);
             }
             //Passage Table
             sql = "SELECT PassageID, Passage FROM Passage_Table";
@@ -65,7 +65,7 @@ public class DatabaseExample {
                 String passage = rs.getString("Passage");
 
                 //Display values
-                System.out.println("Passage: " + passageID + " " + passage);
+                System.out.println("Passage- ID: " + passageID + " Content: " + passage);
             }
             //SMS Table
             sql = "SELECT SMSID, Line, Message, PassageNum FROM SMS_Table";
@@ -80,8 +80,45 @@ public class DatabaseExample {
 
 
                 //Display values
-                System.out.println("SMS: " + smsID + " " + line+ " " + message+ " " +passageNum);
+                System.out.println("SMS- ID: " + smsID + " Line: " + line+ " Message: " + message+ " Passage:" +passageNum);
             }
+            //Quiz Table
+            sql = "SELECT QuizID, AnswerKey, PassageNum FROM Quiz_Table";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                //Retrieve by column name
+                int quizID  = rs.getInt("QuizID");
+                String answerKey  = rs.getString("AnswerKey");
+                int passageNum = rs.getInt("PassageNum");
+
+
+                //Display values
+                System.out.println("Quiz- ID: " + quizID + " Answers: " + answerKey+ " Passage: " +passageNum);
+            }
+            //Update Example
+            //sql ="UPDATE Answer_Table SET answer = 'Answer3' WHERE AnswerID=3";
+            //stmt.executeUpdate(sql);
+
+            //Question/Answer Table
+            sql = "SELECT Question FROM Question_Table WHERE QuestionID = 1";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()) {
+                String question = rs.getString("Question");
+                System.out.println(question);
+            }
+            sql = "SELECT Answer FROM Answer_Table WHERE QuestionNum = 1";
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                //Retrieve by column name
+                String answer = rs.getString("Answer");
+                 //Display values
+                System.out.println(answer);
+            }
+
+
 
             // Clean-up environment
             rs.close();
