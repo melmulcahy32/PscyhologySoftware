@@ -21,7 +21,7 @@ class Student extends User {
     public void viewPassage() throws IOException {
         BufferedReader br;
         // Assuming the below line of code to be connected to the database.
-        br = new BufferedReader(new FileReader("src\\viewText.txt"));
+        br = new BufferedReader(new FileReader("src/viewText.txt"));
         String read;
         while ((read = br.readLine()) != null){
             System.out.println(read);
@@ -63,7 +63,7 @@ class Student extends User {
         BufferedReader br;
         // Assuming the below line of code to be connected to the database.
         try {
-            br = new BufferedReader(new FileReader("C:\\Users\\Mike\\Documents\\viewText.txt"));
+            br = new BufferedReader(new FileReader("src/viewText.txt"));
             String read;
             while ((read = br.readLine()) != null){
                 System.out.println(read);

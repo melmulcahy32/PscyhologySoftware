@@ -17,7 +17,7 @@ public class DatabaseExample {
         Statement stmt = null;
         try{
             //Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(JDBC_DRIVER);
 
             //Open a connection
             System.out.println("Connecting to database...");
