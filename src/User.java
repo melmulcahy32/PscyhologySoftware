@@ -8,29 +8,19 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.event.*;
+import java.util.Formatter;
+import java.util.Locale;
 
 abstract class User {
     abstract void viewPassage() throws IOException;
-    abstract void answerSMS();
-    abstract void answerQuiz();
-    abstract void frame();
+    //abstract void answerSMS();
+    //abstract void answerQuiz();
+    //abstract void frame();
 }
 
 class Student extends User {
     @Override
     public void viewPassage() throws IOException {
-        BufferedReader br;
-        // Assuming the below line of code to be connected to the database.
-        br = new BufferedReader(new FileReader("src/viewText.txt"));
-        String read;
-        while ((read = br.readLine()) != null){
-            System.out.println(read);
-        }
-
-    }
-
-    @Override
-    void frame() {
         JFrame frame = new JFrame("Test");
         frame.setVisible(true);
         frame.setSize(500,200);
@@ -41,16 +31,6 @@ class Student extends User {
         JButton button = new JButton("Read Passage");
         panel.add(button);
         button.addActionListener (new Action1());
-    }
-
-    @Override
-    void answerSMS() {
-
-    }
-
-    @Override
-    void answerQuiz() {
-
     }
 }
 
@@ -66,11 +46,13 @@ class Student extends User {
             br = new BufferedReader(new FileReader("src/viewText.txt"));
             String read;
             while ((read = br.readLine()) != null){
-                System.out.println(read);
                 JLabel label = new JLabel(read);
                 JPanel panel = new JPanel();
                 frame2.add(panel);
                 panel.add(label);
+                JButton button = new JButton("Take quiz");
+                panel.add(button);
+                button.addActionListener(new Action2());
             }
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
@@ -80,10 +62,23 @@ class Student extends User {
     }
 }
 
+class Action2 implements ActionListener{
+    public void actionPerformed (ActionEvent e) {
+        JFrame frame3 = new JFrame("Quiz");
+        frame3.setVisible(true);
+        frame3.setSize(500,200);
+        JPanel panel2 = new JPanel();
+        frame3.add(panel2);
+
+        JButton button3 = new JButton("Submit");
+        panel2.add(button3);
+        //this.dispose();
+    }
+}
+
 class Runner{
     public static void main(String[] args) throws IOException {
         Student s = new Student();
         s.viewPassage();
-        s.frame();
     }
 }
