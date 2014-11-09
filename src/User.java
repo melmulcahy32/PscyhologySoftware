@@ -130,5 +130,14 @@ class Runner{
         s.viewPassage();
         s.answerSMS();
         s.answerQuiz();
+
+        Professor p = new Professor();
+        p.editQuiz();
+        p.answerQuiz();
+        p.editSMS();
+        p.answerSMS();
+        p.editPassage();
+        p.viewPassage();
+        p.editUserSettings();
     }
 }
