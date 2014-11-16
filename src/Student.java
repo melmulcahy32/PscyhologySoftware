@@ -56,7 +56,7 @@ public class Student extends User implements ActionListener {
         sframe.setLocationRelativeTo(null);
         sframe.pack();
         sframe.setSize(500,500);
-        String answer = JOptionPane.showInputDialog("Text here ");
+        String answer = JOptionPane.showInputDialog(null, "Enter Answer:", "SMS", JOptionPane.QUESTION_MESSAGE);
         Scanner scan = new Scanner(answer);
         answer = scan.nextLine();
         sframe.setVisible(true);

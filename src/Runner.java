@@ -19,6 +19,7 @@ public class Runner{
                 else if(e.getActionCommand().equals("Take Survey"))
                 {
                     Student s = new Student();
+                    s.answerSMS();
                 }
                 mainFrame.setVisible(false);
             }
