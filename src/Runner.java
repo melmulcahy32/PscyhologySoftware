@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,8 +19,13 @@ public class Runner{
                 }
                 else if(e.getActionCommand().equals("Take Survey"))
                 {
-                    Student s = new Student();
-                    s.answerSMS();
+                    String studentID = JOptionPane.showInputDialog(null,"Ask the Instructor For Your ID Number","Student ID", JOptionPane.INFORMATION_MESSAGE);
+                    int id = Integer.parseInt(studentID);
+
+                    String passageNum = JOptionPane.showInputDialog(null,"Ask the Instructor for your Passage Number", "Passage Number",JOptionPane.INFORMATION_MESSAGE);
+                    int pass = Integer.parseInt(passageNum);
+
+                    Student s = new Student(id,pass);
                 }
                 mainFrame.setVisible(false);
             }
@@ -38,6 +44,8 @@ public class Runner{
         mainFrame.add(mainPanel);
         mainFrame.setVisible(true);
     }
+
+
     public static void main(String[] args) throws IOException {
 
         startup();

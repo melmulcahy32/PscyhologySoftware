@@ -1,24 +1,21 @@
-import java.io.*;
-import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Scanner;
 
-public class Quiz {
+public class SMS
+{
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
     static final String USER = "root";
     static final String PASS = "";
 
-    private String answerkey;
-    private ArrayList<Question> questions = new ArrayList<Question>();
-    private int quizID;
-    private boolean submitted = false;
-    private boolean saved = false;
-
-    //creates a Quiz object
-    public Quiz()
+    private int line = 8;
+    private String message = "Hello";
+    private boolean smsAnswered = false;
+    private boolean saved = true;
+    private int smsID;
+    public SMS(int smsid)
     {
+        this.smsID = smsid;
+
         Connection conn = null;
         Statement stmt = null;
         try{
@@ -31,24 +28,14 @@ public class Quiz {
             String sql;
 
             //Quiz Table
-            sql = "SELECT AnswerKey FROM Quiz_Table WHERE QuizID = 1 ";
+            sql = "SELECT Message, Line FROM SMS_Table WHERE SMSID =" + smsID;
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()){
                 //Retrieve by column name
-                quizID  = 1;
-                answerkey  = rs.getString("AnswerKey");
+                this.message = rs.getString("Message");
+                this.line = rs.getInt("Line");
             }
-
-            //populate question arraylist
-            sql = "SELECT QuestionID from Question_Table WHERE QuizNum = " + this.quizID;
-            rs = stmt.executeQuery(sql);
-
-            while(rs.next()){
-                Question q = new Question(rs.getInt("QuestionID"));
-                this.questions.add(q);
-            }
-
 
             rs.close();
             stmt.close();
@@ -75,37 +62,9 @@ public class Quiz {
         }//end try
     }
 
-    //selects a question from the Arraylist to be edited.
-    public void editQuestion(int choice, String question)
+    public void submit(int studID, Time time, String response)
     {
-        Question q = questions.get(choice);
-        q.editQuestion(question);
-    }
-
-    //update/change the answerkey.
-    public void editAnswerKey(String akey)
-    {
-        answerkey = akey;
-    }
-
-    // REPLACED view()
-    // returns the questions in order to be displayed on the screen.
-    public ArrayList<Question> getQuestions()
-    {
-        return questions;
-    }
-
-    //returns the answer key to be used to check for correctness.
-    public String getAnswerkey()
-    {
-        return answerkey;
-    }
-
-    //For the student to submit their solutions to be stored in the database.
-    public void submit(int question, int answer, int studID)
-    {
-
-        if(submitted = false) {
+        if(smsAnswered = false) {
             Connection conn = null;
             Statement stmt = null;
             try {
@@ -118,13 +77,13 @@ public class Quiz {
                 String sql;
 
                 //Quiz Table
-                sql = "INSERT INTO StudentAnswer_Table VALUES StudID = " +studID +", QuestionID = " +
-                        questions.get(question).getQuestionID() + ", Answer = " + answer;
+                sql = "INSERT INTO StudentSMS_Table VALUES StudID = " +studID +", SMSID = " +
+                    this.smsID + ", SMSTime = " + time + ", Response = " + response;
                 stmt.executeUpdate(sql);
 
                 stmt.close();
                 conn.close();
-                submitted = true;
+                smsAnswered = true;
             } catch (SQLException se) {
                 //Handle errors for JDBC
                 se.printStackTrace();
@@ -146,10 +105,8 @@ public class Quiz {
                 }//end finally try
             }//end try
         }
-
     }
 
-    //For the professor to save edits to answer key.
     public void save()
     {
         if(saved = false)
@@ -166,7 +123,8 @@ public class Quiz {
                 String sql;
 
                 //Quiz Table
-                sql = "UPDATE Quiz_Table SET AnswerKey = " + answerkey + "WHERE QuizID =" + quizID;
+                sql = "UPDATE SMS_Table SET Message = " + message + ", Line = " +
+                        line + "WHERE SMSID = " + smsID;
                 ResultSet rs = stmt.executeQuery(sql);
 
                 rs.close();
@@ -197,10 +155,25 @@ public class Quiz {
         }
     }
 
-    public String toString()
+    public String getMessage()
     {
-        return "QuizID: " + quizID + " AnswerKey: " + answerkey + "Question 1: "+ questions.get(0);
+        return message;
     }
 
+    public void editSMS(String message, int line)
+    {
+        this.message = message;
+        this.line = line;
+    }
 
+    public int getLine()
+    {
+        return line;
+    }
+
+    public String toString()
+    {
+        String s = message + line;
+        return s;
+    }
 }
