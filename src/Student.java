@@ -79,7 +79,9 @@ public class Student extends User implements ActionListener {
             viewPassage();
         }catch(SQLException se){
             //Handle errors for JDBC
-            se.printStackTrace();
+            //se.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Duplicate ID!!! \nPlease restart the program and insert a different ID.", "Error", JOptionPane.ERROR_MESSAGE);
+
         }catch(Exception e){
             //Handle errors for Class.forName
             e.printStackTrace();
@@ -128,10 +130,12 @@ public class Student extends User implements ActionListener {
         qframe.setSize(500,500);
         qframe.add(quizPanel);
         quizPanel.removeAll();
+        quizPanel.setLayout(new BoxLayout(quizPanel,BoxLayout.Y_AXIS));
 
         JLabel currQues = new JLabel();
         Question currentQuestion = questions.get(curr);
         currQues.setText(currentQuestion.getQuestion());
+        quizPanel.add(currQues);
 
         ArrayList <Answer> answers = currentQuestion.getAnswers();
         int size = answers.size();
@@ -146,8 +150,7 @@ public class Student extends User implements ActionListener {
             quizPanel.add(buttons[i]);
         }
 
-        quizPanel.setLayout(new BoxLayout(quizPanel,BoxLayout.LINE_AXIS));
-        quizPanel.add(currQues);
+
         submit.setSize(20,20);
         quizPanel.add(submit);
         submit.addActionListener(this);
@@ -192,8 +195,15 @@ public class Student extends User implements ActionListener {
             curr++;
             JOptionPane.showMessageDialog(qframe,"Answers Submitted!","Confirmation",JOptionPane.PLAIN_MESSAGE);
             Runner.mainFrame.setVisible(true);
+
+            //add in database stuff
+
             if(curr < numQuestions)
                 answerQuiz();
+            else {
+                JOptionPane.showMessageDialog(qframe, "Quiz Completed!");
+                System.exit(0);
+            }
         }
         else if(e.getActionCommand().equals("Take quiz"))
         {
@@ -202,6 +212,7 @@ public class Student extends User implements ActionListener {
             passframe.dispose();
             answerQuiz();
         }
+
     }
 
 }

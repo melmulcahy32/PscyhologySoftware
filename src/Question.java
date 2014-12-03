@@ -76,6 +76,52 @@ public class Question {
             }//end finally try
         }//end try
     }
+    public Question(int questionID, String question)
+    {
+        this.questionID = questionID;
+        this.question = question;
+
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql;
+
+            //Quiz Table
+            sql = "INSERT INTO Question_Table (QuestionID, QuizNum, Question) VALUES (" +
+                    this.questionID + ", '1','" + this.question+"')";
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+
+
+    }
 
     public int getQuestionID()
     {
@@ -94,9 +140,10 @@ public class Question {
     }
 
     //for the professor to save changes.
-    public void saved()
+    public void save()
     {
-        if(saved = false){
+
+        if(!saved){
             Connection conn = null;
             Statement stmt = null;
             try{
@@ -106,10 +153,9 @@ public class Question {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
                 stmt = conn.createStatement();
-                String sql = "UPDATE Question_Table SET Question = " + question + "WHERE QuestionID = " + questionID;
-                ResultSet rs = stmt.executeQuery(sql);
+                String sql = "UPDATE Question_Table SET Question = '" + question + "' WHERE QuestionID = " + questionID;
+                stmt.executeUpdate(sql);
 
-                rs.close();
                 stmt.close();
                 conn.close();
             }catch(SQLException se){
@@ -147,7 +193,11 @@ public class Question {
     //adds a new answer to the arraylist.
     public void addAnswer(String answer, int type)
     {
-        int lastID = answers.get(answers.size()-1).getAnswerID() + 1;
+        int lastID;
+        if(answers.size() > 0){
+            lastID = answers.get(answers.size()-1).getAnswerID() + 1;}
+        else
+            lastID = 1;
         Answer a = new Answer(lastID, answer, type, questionID);
         answers.add(a);
     }
@@ -168,9 +218,7 @@ public class Question {
             stmt = conn.createStatement();
             //deletes answer from table.
             String sql = "DELETE FROM Answer_Table WHERE AnswerID =" + aID;
-            ResultSet rs = stmt.executeQuery(sql);
-
-            rs.close();
+            stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
         }catch(SQLException se){

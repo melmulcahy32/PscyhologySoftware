@@ -7,8 +7,8 @@ public class SMS
     static final String USER = "root";
     static final String PASS = "";
 
-    private int line = 8;
-    private String message = "Hello";
+    private int line;
+    private String message;
     private boolean smsAnswered = false;
     private boolean saved = true;
     private int smsID;
@@ -109,7 +109,7 @@ public class SMS
 
     public void save()
     {
-        if(saved = false)
+        if(saved == false)
         {
             Connection conn = null;
             Statement stmt = null;
@@ -123,14 +123,12 @@ public class SMS
                 String sql;
 
                 //Quiz Table
-                sql = "UPDATE SMS_Table SET Message = " + message + ", Line = " +
-                        line + "WHERE SMSID = " + smsID;
-                ResultSet rs = stmt.executeQuery(sql);
+                sql = "UPDATE SMS_Table SET Message = '" + message + "', Line = '" +
+                        line + "' WHERE SMSID = '" + smsID+"'";
+                stmt.executeUpdate(sql);
 
-                rs.close();
                 stmt.close();
                 conn.close();
-                System.out.println(this.toString());
             }catch(SQLException se){
                 //Handle errors for JDBC
                 se.printStackTrace();
@@ -164,6 +162,7 @@ public class SMS
     {
         this.message = message;
         this.line = line;
+        saved = false;
     }
 
     public int getLine()

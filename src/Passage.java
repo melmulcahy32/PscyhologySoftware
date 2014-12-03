@@ -78,6 +78,7 @@ public class Passage
     public void editPassage(String passage)
     {
       this.passage = passage;
+        saved = false;
        
     }
     
@@ -95,10 +96,13 @@ public class Passage
     {
     
     }
+
+    public ArrayList<SMS> getSMSList()
+    {return smsList;}
     
     public void save()
     {
-        if(saved = false)
+        if(!saved)
         {
             Connection conn = null;
             Statement stmt = null;
@@ -112,11 +116,9 @@ public class Passage
                 String sql;
 
                 //Quiz Table
-                sql = "UPDATE Passage_Table SET passage = " + passage +
-                        " WHERE PassageID =" + passageID;
-                ResultSet rs = stmt.executeQuery(sql);
-
-                rs.close();
+                sql = "UPDATE Passage_Table SET passage = '" + passage +
+                        "' WHERE PassageID =" + passageID;
+                stmt.executeUpdate(sql);
                 stmt.close();
                 conn.close();
             }catch(SQLException se){

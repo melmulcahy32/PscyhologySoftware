@@ -82,6 +82,59 @@ public class Quiz {
         q.editQuestion(question);
     }
 
+    public void addQuestion(String question)
+    {
+        int quesID;
+        if(questions.size() > 0)
+            quesID = questions.get(questions.size()-1).getQuestionID() + 1;
+        else
+            quesID = 1;
+        Question q = new Question(quesID,question);
+        questions.add(q);
+    }
+
+    public void deleteQuestion(int choice)
+    {
+        Question q = questions.get(choice);
+        int qID = q.getQuestionID();
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            //deletes answer from table.
+            String sql = "DELETE FROM Question_Table WHERE QuestionID =" + qID;
+            stmt.executeUpdate(sql);
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+        questions.remove(choice);
+
+    }
+
     //update/change the answerkey.
     public void editAnswerKey(String akey)
     {

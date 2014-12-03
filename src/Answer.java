@@ -85,8 +85,8 @@ public class Answer {
             String sql;
 
             //Quiz Table
-            sql = "INSERT INTO Answer_Table (AnswerID, Answer, AnswerType, QuestionNum) VALUES " +
-                    this.answerID + ", " + this.answer + ", " + this.type + ", " + questionNum;
+            sql = "INSERT INTO Answer_Table (AnswerID, Answer, AnswerType, QuestionNum) VALUES (" +
+                    this.answerID + ", '" + this.answer + "', " + this.type + ", " + questionNum+")";
             stmt.executeUpdate(sql);
 
             stmt.close();
