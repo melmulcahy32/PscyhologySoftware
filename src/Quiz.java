@@ -6,9 +6,9 @@ import java.util.Scanner;
 
 public class Quiz {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
+    static final String USER = "sql260287";
+    static final String PASS = "uE6!gF6*";
 
     private String answerkey;
     private ArrayList<Question> questions = new ArrayList<Question>();

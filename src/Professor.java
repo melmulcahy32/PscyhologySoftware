@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class Professor extends User implements ActionListener
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
+    static final String USER = "sql260287";
+    static final String PASS = "uE6!gF6*";
 
     JFrame frame = new JFrame("Answer Quiz");
     JFrame frame1 = new JFrame("Answer SMS");
@@ -59,7 +59,7 @@ public class Professor extends User implements ActionListener
     JTextField userText = new JTextField();
     JPasswordField passwordText = new JPasswordField();
 
-    JTextArea vpassage = new JTextArea(20,20);
+    JTextArea vpassage = new JTextArea(200,200);
     JTextArea epassage = new JTextArea(20,20);
 
     JTextField eQuestion = new JTextField();
@@ -219,6 +219,7 @@ public class Professor extends User implements ActionListener
 
     public void editQuiz()
     {
+        panel2.removeAll();
         frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JLabel selQuestion = new JLabel("Please Select a Question to Edit:");
         panel2.add(selQuestion);
@@ -237,8 +238,10 @@ public class Professor extends User implements ActionListener
 
         frame2.setLocationRelativeTo(null);
         frame2.pack();
-        frame2.setSize(500,500);  
-        frame2.add(panel2);
+        frame2.setSize(500,500);
+        JScrollPane jsp = new JScrollPane(panel2);
+
+        frame2.add(jsp);
         sQuiz.setSize(20, 20);
         sQuiz.addActionListener(this);
         panel2.add(sQuiz);
@@ -256,9 +259,9 @@ public class Professor extends User implements ActionListener
         currQuestion = q;
         editQuestion.setLocationRelativeTo(null);
         editQuestion.pack();
-        editQuestion.setSize(500, 500);
+        editQuestion.setSize(1000, 1000);
         eQues.setLayout(new BoxLayout(eQues, BoxLayout.Y_AXIS));
-        eQuestion.setPreferredSize(new Dimension(500, 24));
+        eQuestion.setPreferredSize(new Dimension(750, 24));
         eQuestion.setText(q.getQuestion());
         eQuestion.setMaximumSize(eQuestion.getPreferredSize());
         eQuestion.setEditable(true);
@@ -282,7 +285,10 @@ public class Professor extends User implements ActionListener
         eQues.add(addAnswer);
         eQues.add(delAnswer);
         eQues.add(sQues);
-        editQuestion.add(eQues);
+
+        JScrollPane jsp = new JScrollPane(eQues);
+
+        editQuestion.add(jsp);
         editQuestion.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         editQuestion.setVisible(true);
 
@@ -291,18 +297,22 @@ public class Professor extends User implements ActionListener
 
     public void editPassage(int passage)
     {
+        panel3.removeAll();
         passageID = passage;
         p = new Passage(passage);
+        panel3.setLayout(new BoxLayout(panel3,BoxLayout.Y_AXIS));
         vpassage.setText(p.viewPassage());
         vpassage.setEditable(true);
         frame3.setLocationRelativeTo(null);
         frame3.pack();
-        frame3.setSize(500, 500);
+        frame3.setSize(1000, 1000);
         sPassage.setSize(20,20);
         panel3.add(sPassage);
         frame3.add(panel3);
-        frame3.setVisible(true);    
+        frame3.setVisible(true);
 
+        JLabel title = new JLabel("An Overview of Personality Disorders");
+        panel3.add(title);
         panel3.add(vpassage);
         vpassage.setLineWrap(true);
         vpassage.setWrapStyleWord(true);

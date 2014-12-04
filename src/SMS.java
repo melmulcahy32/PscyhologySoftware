@@ -3,9 +3,9 @@ import java.sql.*;
 public class SMS
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
+    static final String USER = "sql260287";
+    static final String PASS = "uE6!gF6*";
 
     private int line;
     private String message;
@@ -64,7 +64,7 @@ public class SMS
 
     public void submit(int studID, Time time, String response)
     {
-        if(smsAnswered = false) {
+        if(smsAnswered == false) {
             Connection conn = null;
             Statement stmt = null;
             try {
@@ -77,8 +77,8 @@ public class SMS
                 String sql;
 
                 //Quiz Table
-                sql = "INSERT INTO StudentSMS_Table VALUES StudID = " +studID +", SMSID = " +
-                    this.smsID + ", SMSTime = " + time + ", Response = " + response;
+                sql = "INSERT INTO StudentSMS_Table(StudID, SMSID, SMSTime, Response) VALUES (" +studID +"," +
+                    this.smsID + ",'" + time + "', '" + response+"')";
                 stmt.executeUpdate(sql);
 
                 stmt.close();

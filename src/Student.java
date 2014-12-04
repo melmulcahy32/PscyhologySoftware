@@ -21,9 +21,9 @@ import java.util.Scanner;
  */
 public class Student extends User implements ActionListener {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
+    static final String USER = "sql260287";
+    static final String PASS = "uE6!gF6*";
 
     ArrayList timeSMS = new ArrayList();
     int passage;
@@ -50,6 +50,7 @@ public class Student extends User implements ActionListener {
 
     Quiz q = new Quiz();
     ArrayList <Question> questions = q.getQuestions();
+    ArrayList<SMS> sms;
     int numQuestions = questions.size();
     int curr = 0;
 
@@ -104,21 +105,39 @@ public class Student extends User implements ActionListener {
     public void viewPassage() {
 
         pframe.setVisible(true);
-        pframe.setSize(500,200);
+        pframe.setSize(750,500);
         pframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
+        JLabel instructions = new JLabel("<html>You will read a passage on personality disorders. <br><br>Please read carefully as you will be tested on the material after you are finished. <br><br>You might receive some text messages from the experimenter before reading, while you are reading, or not at all.<br> If you do, please respond to those messages immediately and continue reading.<br> You may use the arrow keys on the key board to move from line to line.<br><br>When the passage is complete, you will respond to some questions about the reading.<br> Please try to do the best that you can.<br><br>After completing these questions, there will be some additional questions asking you about your behaviors.<br><br>When you are ready to begin, please enter the number the experimenter has provided.<br><br>Thank you for your participation.<html>");
         pframe.add(panel);
+        panel.add(instructions);
         read = new JButton("Read Passage");
         panel.add(read);
         read.addActionListener(this);
 
     }
 
-      public void answerSMS()
+    public void answerSMS()
+    {}
+      public void answerSMS(int line)
     {
-        
-        
+        passframe.setVisible(false);
+        SMS s = null;
+        for(int i =0; i < sms.size(); i++)
+        {
+            int l = sms.get(i).getLine();
+            if(l == line) {
+                s = sms.get(i);
+                break;
+            }
+        }
+        if(!(s == null)) {
+            String input = JOptionPane.showInputDialog(null, "" + s.getMessage());
+            Time t = new Time(0); //has to be in milliseconds
+            s.submit(this.idNumber,t,input);
+        }
+        passframe.setVisible(true);
 
     }
 
@@ -145,7 +164,13 @@ public class Student extends User implements ActionListener {
 
         for(int i = 0; i < size; i++)
         {
-            buttons[i] = new JRadioButton(answers.get(i).getAnswer());
+            //1 = radio button, 0 = text field.
+            if(answers.get(i).getType() == 1)
+                buttons[i] = new JRadioButton(answers.get(i).getAnswer());
+            else {
+                buttons[i] = new JRadioButton("Other");
+                quizPanel.add(tf);
+            }
             radioButtons.add(buttons[i]);
             quizPanel.add(buttons[i]);
         }
@@ -164,20 +189,23 @@ public class Student extends User implements ActionListener {
         if(e.getActionCommand().equals("Read Passage"))
         {
             Passage p = new Passage(this.passage);
-
+            sms = p.getSMSList();
             pframe.dispose();
             passframe.setVisible(true);
-            passframe.setSize(500, 500);
+            passframe.setSize(1000, 1000);
             passframe.add(passagePanel, BorderLayout.CENTER);
             takeQuiz.addActionListener(this);
             passagePanel.add(takeQuiz);
-            JTextArea passage = new JTextArea(5,20);
+            JTextArea passage = new JTextArea(150,150);
 
             passage.setEditable(false);
             passage.setText(p.viewPassage());
 
             passage.setLineWrap(true);
             passage.setWrapStyleWord(true);
+            passagePanel.setLayout(new BoxLayout(passagePanel,BoxLayout.Y_AXIS));
+            JLabel title = new JLabel("An Overview of Psychological Disorders");
+            passagePanel.add(title);
             passagePanel.add(passage);
 
             JScrollPane scroll = new JScrollPane (passage);

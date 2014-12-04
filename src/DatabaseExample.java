@@ -6,11 +6,11 @@ import java.sql.*;
 public class DatabaseExample {
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
 
     //  Database credentials
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String USER = "sql260287";
+    static final String PASS = "uE6!gF6*";
 
     public static void main(String[] args) {
         Connection conn = null;
@@ -42,7 +42,7 @@ public class DatabaseExample {
                 //Display values
                 System.out.println("Prof- username: " + user + " FName: " + fn + " Lname: " + ln + " Pass: " + pw);
             }
-            //Student Table
+            /*Student Table
             sql = "SELECT StudentID, PassageNum, TimePassage FROM Student_Table";
             rs = stmt.executeQuery(sql);
 
@@ -119,7 +119,7 @@ public class DatabaseExample {
             }
 
 
-
+        */
             // Clean-up environment
             rs.close();
             stmt.close();
