@@ -62,6 +62,51 @@ public class SMS
         }//end try
     }
 
+    public SMS(int smsid, String message, int line, int passage)
+    {
+        this.smsID = smsid;
+        this.message = message;
+        this.line = line;
+
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql;
+
+            sql = "INSERT INTO SMS_Table (SMSID,Message,Line,PassageNum) VALUES (" +
+                    this.smsID + ",'"+ this.message+"'," + this.line+"," +passage+")";
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+    }
+
     public void submit(int studID, Time time, String response)
     {
         if(smsAnswered == false) {

@@ -42,6 +42,7 @@ public class Professor extends User implements ActionListener
     JButton delQues = new JButton("Delete Question");
     JButton addAnswer = new JButton("Add Answer");
     JButton delAnswer = new JButton("Delete Answer");
+    JButton addSMS = new JButton("Add SMS");
     JButton button1 = new JButton("Save");
     JButton button3 = new JButton("OK");
     JButton button4 = new JButton("Preview Quiz");
@@ -385,8 +386,8 @@ public class Professor extends User implements ActionListener
 
     public void editPassSMS(int passNum)
     {
-        Passage pa = new Passage(passNum);
-        sms = pa.getSMSList();
+        p = new Passage(passNum);
+        sms = p.getSMSList();
         panel1.removeAll();
         editSMSs.setLocationRelativeTo(null);
         editSMSs.pack();
@@ -406,6 +407,10 @@ public class Professor extends User implements ActionListener
         sSMS.setActionCommand("SMS Message");
         sSMS.addActionListener(this);
         panel1.add(sSMS);
+
+        addSMS.addActionListener(this);
+
+        panel1.add(addSMS);
         editSMSs.add(panel1);
         editSMSs.setVisible(true);
     }
@@ -672,6 +677,20 @@ public class Professor extends User implements ActionListener
             sm.save();
             editSMSs.dispose();
             editSMS();
+        }
+        else if(e.getActionCommand().equals("Add SMS"))
+        {
+            String input = JOptionPane.showInputDialog("Add SMS", "Insert Message Here");
+            String line = JOptionPane.showInputDialog("Add Line Number","Insert line number");
+            if(!(input.equals(""))) {
+                int l = Integer.parseInt((line));
+                int id = sms.size() + 1;
+
+                sms.add(new SMS(id,input,l,p.getPassageID()));
+            }
+            JOptionPane.showMessageDialog(null,"SMS Added");
+            panel1.removeAll();
+            editPassSMS(p.getPassageID());
         }
 
     }

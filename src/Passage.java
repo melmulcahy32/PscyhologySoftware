@@ -11,7 +11,7 @@ public class Passage
     private int lineNum;
     private boolean saved;
     String passage;
-    ArrayList smsList = new ArrayList();
+    ArrayList<SMS> smsList = new ArrayList<SMS>();
     public Passage( int passageID)
     {
         this.passageID = passageID;
@@ -81,7 +81,10 @@ public class Passage
         saved = false;
        
     }
-    
+
+    public int getPassageID()
+    {return passageID;
+    }
     public int getLine()
     {
        return lineNum;
@@ -99,7 +102,9 @@ public class Passage
 
     public ArrayList<SMS> getSMSList()
     {return smsList;}
-    
+
+
+
     public void save()
     {
         if(!saved)
