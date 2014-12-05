@@ -68,9 +68,8 @@ public class Answer {
     }
 
     //creates new answer in the database
-    public Answer (int answerID, String answer, int type, int questionNum)
+    public Answer (String answer, int type, int questionNum)
     {
-        this.answerID = answerID;
         this.answer = answer;
         this.type = type;
 
@@ -85,11 +84,19 @@ public class Answer {
             stmt = conn.createStatement();
             String sql;
 
+            sql = "SELECT MAX(AnswerID) FROM Answer_Table";
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+
+            int aID = rs.getInt("MAX(AnswerID)");
+            this.answerID = aID+1;
+
             //Quiz Table
             sql = "INSERT INTO Answer_Table (AnswerID, Answer, AnswerType, QuestionNum) VALUES (" +
                     this.answerID + ", '" + this.answer + "', " + this.type + ", " + questionNum+")";
             stmt.executeUpdate(sql);
 
+            rs.close();
             stmt.close();
             conn.close();
         }catch(SQLException se){

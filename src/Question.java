@@ -183,6 +183,47 @@ public class Question {
         }
     }
 
+    public void submit(int studID, int questionID, int answerID)
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+               //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql;
+
+            //Quiz Table
+            sql = "INSERT INTO StudentAnswer_Table(StudID, QuestionID, Answer) VALUES (" +studID +"," + questionID + ", " + answerID+")";
+            stmt.executeUpdate(sql);
+
+                stmt.close();
+                conn.close();
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            } catch (Exception e) {
+                //Handle errors for Class.forName
+                e.printStackTrace();
+            } finally {
+                //finally block used to close resources
+                try {
+                    if (stmt != null)
+                        stmt.close();
+                } catch (SQLException se2) {
+                }// nothing we can do
+                try {
+                    if (conn != null)
+                        conn.close();
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                }//end finally try
+            }//end try
+    }
+
     //updates the question content.
     public void editQuestion(String question)
     {
@@ -198,7 +239,7 @@ public class Question {
             lastID = answers.get(answers.size()-1).getAnswerID() + 1;}
         else
             lastID = 1;
-        Answer a = new Answer(lastID, answer, type, questionID);
+        Answer a = new Answer(answer, type, questionID);
         answers.add(a);
     }
 

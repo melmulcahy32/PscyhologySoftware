@@ -42,10 +42,13 @@ public class Student extends User implements ActionListener {
             JButton submit = new JButton("Submit");
             JButton read = new JButton("Read");
             JButton takeQuiz = new JButton("Take quiz");
+            ButtonGroup radioButtons;
+            JRadioButton[] buttons;
 
             Quiz q = new Quiz();
             ArrayList<Question> questions = q.getQuestions();
             ArrayList<SMS> sms;
+            ArrayList<Answer> answers;
             int numQuestions = questions.size();
             int curr = 0;
 
@@ -153,11 +156,11 @@ public class Student extends User implements ActionListener {
             currQues.setText(currentQuestion.getQuestion());
             quizPanel.add(currQues);
 
-            ArrayList<Answer> answers = currentQuestion.getAnswers();
+            answers = currentQuestion.getAnswers();
             int size = answers.size();
 
-            JRadioButton[] buttons = new JRadioButton[size];
-            ButtonGroup radioButtons = new ButtonGroup();
+            buttons = new JRadioButton[size];
+            radioButtons = new ButtonGroup();
 
             for (int i = 0; i < size; i++) {
                 //1 = radio button, 0 = text field.
@@ -266,11 +269,17 @@ public class Student extends User implements ActionListener {
 
         }else if (e.getActionCommand().equals("Submit")) {
             qframe.dispose();
+                for(int i = 0; i < answers.size(); i++)
+                {
+                    if(buttons[i].isSelected())
+                    {
+                        questions.get(curr).submit(this.idNumber,questions.get(curr).getQuestionID(),answers.get(i).getAnswerID());
+                        break;
+                    }
+                }
             curr++;
             JOptionPane.showMessageDialog(qframe, "Answers Submitted!", "Confirmation", JOptionPane.PLAIN_MESSAGE);
-            Runner.mainFrame.setVisible(true);
 
-            //add in database stuff
 
             if (curr < numQuestions)
                 answerQuiz();
