@@ -22,6 +22,7 @@ public class Professor extends User implements ActionListener
     JFrame login;
     JFrame editQuestion = new JFrame("Edit Question");
     JFrame editSMSs = new JFrame("Edit SMS");
+    JFrame changePass = new JFrame("Change Password");
 
     JPanel panel = new JPanel();
     JPanel panel1 = new JPanel();
@@ -30,6 +31,7 @@ public class Professor extends User implements ActionListener
     JPanel panel4 = new JPanel();
     JPanel panel5 = new JPanel();
     JPanel eQues = new JPanel();
+    JPanel cPass = new JPanel();
 
     JRadioButton j = new JRadioButton();
     JButton sPassage = new JButton("Save Passage");
@@ -53,6 +55,9 @@ public class Professor extends User implements ActionListener
     JButton eSMS = new JButton("Edit SMS");
     JButton eUser = new JButton("Edit User Settings");
     JButton logout = new JButton("Log Out");
+    JButton export = new JButton("Export");
+    JButton editPass = new JButton("Change Password");
+    JButton savePass = new JButton("Save Password");
 
     ButtonGroup qRadioButtons;
     JRadioButton[] rButtons;
@@ -62,11 +67,15 @@ public class Professor extends User implements ActionListener
 
     JTextArea vpassage = new JTextArea(200,200);
     JTextArea epassage = new JTextArea(20,20);
+    JLabel exportMess = new JLabel("");
 
     JTextField eQuestion = new JTextField();
     JTextField[] answers;
     JTextField edSMS = new JTextField();
     JTextField smsLine = new JTextField();
+    JTextField eUsername = new JTextField();
+    JPasswordField ePassword = new JPasswordField(20);
+    JPasswordField confirmPass = new JPasswordField(20);
 
     ArrayList <Question> ques;
     ArrayList <Answer> ans;
@@ -81,6 +90,7 @@ public class Professor extends User implements ActionListener
     int passageID;
 
     private String username;
+    private String newUsername = username;
     private String password;
     boolean loggedin = false;
     boolean savedSettings = false;
@@ -119,6 +129,17 @@ public class Professor extends User implements ActionListener
 
         login.setVisible(true);
     }
+    public void editUsername(String username)
+    {
+        this.newUsername = username;
+        save();
+    }
+
+    public void editPassword(String password)
+    {
+        this.password = password;
+        save();
+    }
     public void viewPassage()
     {
 
@@ -133,13 +154,18 @@ public class Professor extends User implements ActionListener
         panel5.add(eQuiz);
         panel5.add(eSMS);
         panel5.add(eUser);
+        panel5.add(export);
+        panel5.add(exportMess);
+        exportMess.setText("");
         panel5.add(logout);
+        export.addActionListener(this);
         ePassage.addActionListener(this);
         eQuiz.addActionListener(this);
         eSMS.addActionListener(this);
         eUser.addActionListener(this);
         logout.addActionListener(this);
         sPassage.addActionListener(this);
+
         button1.addActionListener(this);
         button3.addActionListener(this);
         button4.addActionListener(this);
@@ -178,7 +204,7 @@ public class Professor extends User implements ActionListener
                 login.dispose();
                 Runner.mainFrame.setVisible(true);
             }
-
+            this.newUsername = username;
             rs.close();
             stmt.close();
             conn.close();
@@ -444,9 +470,14 @@ public class Professor extends User implements ActionListener
     {
         frame7.setLocationRelativeTo(null);
         frame7.pack();
-        frame7.setSize(500,500);
+        frame7.setSize(500, 500);
         frame7.add(panel);
-        sUser.setSize(20,20);
+        sUser.setSize(20, 20);
+        panel.add(eUsername);
+        panel.add(editPass);
+        eUsername.setText(this.username);
+        eUsername.setBounds(100, 10, 160, 25);
+        editPass.addActionListener(this);
         panel.add(sUser);
         frame7.setVisible(true);
     }
@@ -471,6 +502,41 @@ public class Professor extends User implements ActionListener
 
     public void save()
     {
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql = "UPDATE Professor_Table SET Username = '" + this.newUsername + "', Password = '" + this.password + "' WHERE Username = '" + this.username +"'";
+            stmt.executeUpdate(sql);
+
+            this.username = this.newUsername;
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }finally{
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
 
     }
 
@@ -691,6 +757,56 @@ public class Professor extends User implements ActionListener
             JOptionPane.showMessageDialog(null,"SMS Added");
             panel1.removeAll();
             editPassSMS(p.getPassageID());
+        }
+        else if(e.getActionCommand().equals("Export"))
+        {
+            exportMess.setText("");
+            Export ex = new Export();
+            ex.export();
+            exportMess.setText("Data Exported");
+        }
+        else if(e.getActionCommand().equals("Change Password"))
+        {
+            changePass.setLocationRelativeTo(null);
+            changePass.setSize(300,170);
+            changePass.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+            changePass.add(cPass);
+
+            JLabel newPass = new JLabel("New Password:");
+            cPass.add(newPass);
+            ePassword.setBounds(100, 10, 160, 25);
+            cPass.add(ePassword);
+
+
+            JLabel conPass = new JLabel("Confirm Password");
+            cPass.add(conPass);
+            confirmPass.setBounds(100, 10, 160, 25);
+            cPass.add(confirmPass);
+
+            cPass.add(savePass);
+            savePass.addActionListener(this);
+
+            changePass.setVisible(true);
+        }
+        else if(e.getActionCommand().equals("Save Password"))
+        {
+            char[] p1 = ePassword.getPassword();
+            char[] p2 = confirmPass.getPassword();
+            String p3 = new String(p1);
+            String p4 = new String(p2);
+            if(p3.equals(p4))
+                editPassword(p3);
+            cPass.removeAll();
+            ePassword.setText("");
+            confirmPass.setText("");
+            changePass.setVisible(false);
+        }
+        else if(e.getActionCommand().equals("Save User Settings"))
+        {
+            editUsername(eUsername.getText());
+            panel.removeAll();
+            frame7.setVisible(false);
         }
 
     }

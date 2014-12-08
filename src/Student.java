@@ -191,10 +191,10 @@ public class Student extends User implements ActionListener {
                 pframe.dispose();
                 passframe.setVisible(true);
                 passframe.setSize(1000, 1000);
-                passframe.add(passagePanel, BorderLayout.CENTER);
+                passframe.add(passagePanel);
                 takeQuiz.addActionListener(this);
                 passagePanel.add(takeQuiz);
-                JTextArea passage = new JTextArea(150, 150);
+                JTextArea passage = new JTextArea(5, 20);
 
                 passage.setEditable(false);
                 passage.setText(p.viewPassage());
