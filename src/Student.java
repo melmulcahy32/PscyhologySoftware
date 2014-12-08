@@ -53,7 +53,7 @@ public class Student extends User implements ActionListener {
             int curr = 0;
 
 
-            public Student( int id, int passageNum)
+        public Student( int id, int passageNum)
             {
                 this.idNumber = id;
                 this.passage = passageNum;
@@ -164,13 +164,16 @@ public class Student extends User implements ActionListener {
 
             for (int i = 0; i < size; i++) {
                 //1 = radio button, 0 = text field.
-                if (answers.get(i).getType() == 1)
+                if (answers.get(i).getType() == 1) {
                     buttons[i] = new JRadioButton(answers.get(i).getAnswer());
+                    radioButtons.add(buttons[i]);
+                }
                 else {
                     buttons[i] = new JRadioButton("Other");
+                    radioButtons.add(buttons[i]);
                     quizPanel.add(tf);
                 }
-                radioButtons.add(buttons[i]);
+
                 quizPanel.add(buttons[i]);
             }
 
@@ -269,17 +272,20 @@ public class Student extends User implements ActionListener {
 
         }else if (e.getActionCommand().equals("Submit")) {
             qframe.dispose();
-                for(int i = 0; i < answers.size(); i++)
-                {
-                    if(buttons[i].isSelected())
-                    {
-                        questions.get(curr).submit(this.idNumber,questions.get(curr).getQuestionID(),answers.get(i).getAnswerID());
+                for(int i = 0; i < answers.size(); i++) {
+                    if (buttons[i].isSelected()) {
+                        if (answers.get(i).getType() != 0)
+                            questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), answers.get(i).getAnswer());
+                        else
+                            questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), tf.getText());
+
+
                         break;
                     }
                 }
             curr++;
             JOptionPane.showMessageDialog(qframe, "Answers Submitted!", "Confirmation", JOptionPane.PLAIN_MESSAGE);
-
+            tf.setText("");
 
             if (curr < numQuestions)
                 answerQuiz();

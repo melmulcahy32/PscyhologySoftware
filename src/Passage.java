@@ -85,25 +85,9 @@ public class Passage
     public int getPassageID()
     {return passageID;
     }
-    public int getLine()
-    {
-       return lineNum;
-    }
-    
-    public void updateLine(int lineNum)
-    {
-      this.lineNum = lineNum;
-    }
-    
-    public void getSMS(int lineNum)
-    {
-    
-    }
 
     public ArrayList<SMS> getSMSList()
     {return smsList;}
-
-
 
     public void save()
     {

@@ -183,7 +183,7 @@ public class Question {
         }
     }
 
-    public void submit(int studID, int questionID, int answerID)
+    public void submit(int studID, int questionID, String answer)
     {
         Connection conn = null;
         Statement stmt = null;
@@ -197,7 +197,7 @@ public class Question {
             String sql;
 
             //Quiz Table
-            sql = "INSERT INTO StudentAnswer_Table(StudID, QuestionID, Answer) VALUES (" +studID +"," + questionID + ", " + answerID+")";
+            sql = "INSERT INTO StudentAnswer_Table(StudID, QuestionID, Answer) VALUES (" +studID +"," + questionID + ", " + answer+")";
             stmt.executeUpdate(sql);
 
                 stmt.close();
