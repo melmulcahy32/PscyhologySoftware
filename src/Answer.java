@@ -8,15 +8,16 @@ import java.util.Scanner;
 
 public class Answer {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     private String answer;
     private int answerID;
     private int type;
     private boolean saved;
 
+    //retrieves specific answer from the database.
     public Answer (int answerID)
     {
         this.answerID = answerID;
@@ -32,7 +33,7 @@ public class Answer {
             stmt = conn.createStatement();
             String sql;
 
-            //Quiz Table
+            //Answer_Table
             sql = "SELECT Answer, AnswerType FROM Answer_Table WHERE AnswerID =" + answerID;
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -91,7 +92,7 @@ public class Answer {
             int aID = rs.getInt("MAX(AnswerID)");
             this.answerID = aID+1;
 
-            //Quiz Table
+            //Answer_Table
             sql = "INSERT INTO Answer_Table (AnswerID, Answer, AnswerType, QuestionNum) VALUES (" +
                     this.answerID + ", '" + this.answer + "', " + this.type + ", " + questionNum+")";
             stmt.executeUpdate(sql);
@@ -122,6 +123,7 @@ public class Answer {
 
     }
 
+    //returns answerID
     public int getAnswerID()
     {
         return answerID;
@@ -133,7 +135,7 @@ public class Answer {
         return answer;
     }
 
-    //returns the answer type. 1 = fill in the blank, 0 = multiple choice.
+    //returns the answer type. 0 = fill in the blank, 1 = multiple choice.
     public int getType()
     {
         return type;
@@ -147,11 +149,8 @@ public class Answer {
         this.type = type;
         //save to the database
     }
-    public boolean getSaved()
-    {
-        return saved;
-    }
 
+    //saves changes to the text to the database.
     public void save()
     {
         if(saved = false){

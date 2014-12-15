@@ -9,23 +9,22 @@ import java.util.*;
 
 public class Question {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     private String question;
     private int questionID;
     private ArrayList<Answer> answers = new ArrayList<Answer>();
     private boolean saved;
 
-    //creates new Question object.
-    public Question (int questionID)
-    {
+    //retrieves specific question from database
+    public Question(int questionID) {
         this.questionID = questionID;
 
         Connection conn = null;
         Statement stmt = null;
-        try{
+        try {
             //Register JDBC driver
             Class.forName(JDBC_DRIVER);
 
@@ -38,7 +37,7 @@ public class Question {
             sql = "SELECT Question FROM Question_Table WHERE QuestionID =" + questionID;
             ResultSet rs = stmt.executeQuery(sql);
 
-            while(rs.next()){
+            while (rs.next()) {
                 //Retrieve by column name
                 this.question = rs.getString("Question");
             }
@@ -47,7 +46,7 @@ public class Question {
             sql = "SELECT AnswerID FROM Answer_Table WHERE QuestionNum =" + questionID;
             rs = stmt.executeQuery(sql);
 
-            while(rs.next()){
+            while (rs.next()) {
                 Answer a = new Answer(rs.getInt("AnswerID"));
                 answers.add(a);
             }
@@ -55,35 +54,36 @@ public class Question {
             rs.close();
             stmt.close();
             conn.close();
-        }catch(SQLException se){
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }finally{
+        } finally {
             //finally block used to close resources
-            try{
-                if(stmt!=null)
+            try {
+                if (stmt != null)
                     stmt.close();
-            }catch(SQLException se2){
+            } catch (SQLException se2) {
             }// nothing we can do
-            try{
-                if(conn!=null)
+            try {
+                if (conn != null)
                     conn.close();
-            }catch(SQLException se){
+            } catch (SQLException se) {
                 se.printStackTrace();
             }//end finally try
         }//end try
     }
-    public Question(int questionID, String question)
-    {
+
+    //creates new question with a new ID and text
+    public Question(int questionID, String question) {
         this.questionID = questionID;
         this.question = question;
 
         Connection conn = null;
         Statement stmt = null;
-        try{
+        try {
             //Register JDBC driver
             Class.forName(JDBC_DRIVER);
 
@@ -94,28 +94,28 @@ public class Question {
 
             //Quiz Table
             sql = "INSERT INTO Question_Table (QuestionID, QuizNum, Question) VALUES (" +
-                    this.questionID + ", '1','" + this.question+"')";
+                    this.questionID + ", '1','" + this.question + "')";
             stmt.executeUpdate(sql);
 
             stmt.close();
             conn.close();
-        }catch(SQLException se){
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }finally{
+        } finally {
             //finally block used to close resources
-            try{
-                if(stmt!=null)
+            try {
+                if (stmt != null)
                     stmt.close();
-            }catch(SQLException se2){
+            } catch (SQLException se2) {
             }// nothing we can do
-            try{
-                if(conn!=null)
+            try {
+                if (conn != null)
                     conn.close();
-            }catch(SQLException se){
+            } catch (SQLException se) {
                 se.printStackTrace();
             }//end finally try
         }//end try
@@ -123,30 +123,28 @@ public class Question {
 
     }
 
-    public int getQuestionID()
-    {
+    //returns questionID
+    public int getQuestionID() {
         return questionID;
     }
+
     //returns the question's text.
-    public String getQuestion()
-    {
+    public String getQuestion() {
         return question;
     }
 
     //returns an arraylist of the possible answers.
-    public ArrayList<Answer> getAnswers()
-    {
+    public ArrayList<Answer> getAnswers() {
         return answers;
     }
 
     //for the professor to save changes.
-    public void save()
-    {
+    public void save() {
 
-        if(!saved){
+        if (!saved) {
             Connection conn = null;
             Statement stmt = null;
-            try{
+            try {
                 //Register JDBC driver
                 Class.forName(JDBC_DRIVER);
 
@@ -155,50 +153,6 @@ public class Question {
                 stmt = conn.createStatement();
                 String sql = "UPDATE Question_Table SET Question = '" + question + "' WHERE QuestionID = " + questionID;
                 stmt.executeUpdate(sql);
-
-                stmt.close();
-                conn.close();
-            }catch(SQLException se){
-                //Handle errors for JDBC
-                se.printStackTrace();
-            }catch(Exception e){
-                //Handle errors for Class.forName
-                e.printStackTrace();
-            }finally{
-                //finally block used to close resources
-                try{
-                    if(stmt!=null)
-                        stmt.close();
-                }catch(SQLException se2){
-                }// nothing we can do
-                try{
-                    if(conn!=null)
-                        conn.close();
-                }catch(SQLException se){
-                    se.printStackTrace();
-                }//end finally try
-            }//end try
-
-            saved = true;
-        }
-    }
-
-    public void submit(int studID, int questionID, String answer)
-    {
-        Connection conn = null;
-        Statement stmt = null;
-        try {
-               //Register JDBC driver
-            Class.forName(JDBC_DRIVER);
-
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-            stmt = conn.createStatement();
-            String sql;
-
-            //Quiz Table
-            sql = "INSERT INTO StudentAnswer_Table(StudID, QuestionID, Answer) VALUES (" +studID +"," + questionID + ", " + answer+")";
-            stmt.executeUpdate(sql);
 
                 stmt.close();
                 conn.close();
@@ -222,35 +176,76 @@ public class Question {
                     se.printStackTrace();
                 }//end finally try
             }//end try
+
+            saved = true;
+        }
+    }
+
+    //submits student's answers to the database.
+    public void submit(int studID, int questionID, String answer, int answerID) {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql;
+
+            //Quiz Table
+            sql = "INSERT INTO StudentAnswer_Table(StudID, QuestionID, Answer, AnswerID) VALUES (" + studID + "," + questionID + ", '" + answer + "'," + answerID + ")";
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
     }
 
     //updates the question content.
-    public void editQuestion(String question)
-    {
+    public void editQuestion(String question) {
         this.question = question;
         saved = false;
     }
 
     //adds a new answer to the arraylist.
-    public void addAnswer(String answer, int type)
-    {
+    public void addAnswer(String answer, int type) {
         int lastID;
-        if(answers.size() > 0){
-            lastID = answers.get(answers.size()-1).getAnswerID() + 1;}
-        else
+        if (answers.size() > 0) {
+            lastID = answers.get(answers.size() - 1).getAnswerID() + 1;
+        } else
             lastID = 1;
         Answer a = new Answer(answer, type, questionID);
         answers.add(a);
     }
 
     //removes an answer from the arraylist.
-    public void deleteAnswer(int choice)
-    {
+    public void deleteAnswer(int choice) {
         Answer a = answers.get(choice);
         int aID = a.getAnswerID();
         Connection conn = null;
         Statement stmt = null;
-        try{
+        try {
             //Register JDBC driver
             Class.forName(JDBC_DRIVER);
 
@@ -262,23 +257,23 @@ public class Question {
             stmt.executeUpdate(sql);
             stmt.close();
             conn.close();
-        }catch(SQLException se){
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        }catch(Exception e){
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
-        }finally{
+        } finally {
             //finally block used to close resources
-            try{
-                if(stmt!=null)
+            try {
+                if (stmt != null)
                     stmt.close();
-            }catch(SQLException se2){
+            } catch (SQLException se2) {
             }// nothing we can do
-            try{
-                if(conn!=null)
+            try {
+                if (conn != null)
                     conn.close();
-            }catch(SQLException se){
+            } catch (SQLException se) {
                 se.printStackTrace();
             }//end finally try
         }//end try
@@ -290,9 +285,5 @@ public class Question {
     public void editAnswer(int choice, String answer, int type) {
         Answer a = answers.get(choice);
         a.editAnswer(answer, type);
-    }
-    public String toString()
-    {
-        return "\n" + question + "\n" + answers.get(0).getAnswer();
     }
 }

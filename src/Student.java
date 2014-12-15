@@ -17,9 +17,9 @@ public class Student extends User implements ActionListener {
 
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     ArrayList timeSMS = new ArrayList();
     int passage;
@@ -58,7 +58,7 @@ public class Student extends User implements ActionListener {
     int numPass;
 
 
-
+    //creates a new student entry in the database
     public Student(int id, int passageNum) {
         this.idNumber = id;
         this.passage = passageNum;
@@ -106,6 +106,7 @@ public class Student extends User implements ActionListener {
         }//end try
     }
 
+    //Timer!
     ActionListener actListner = new ActionListener() {
 
 
@@ -114,21 +115,14 @@ public class Student extends User implements ActionListener {
 
 
 
-        public void actionPerformed(ActionEvent event) {
-
-
-
-            count += 1;
-
-            System.out.println(count);
-
-
+        public void actionPerformed(ActionEvent event) {count += 1;
         }
 
 
     };
     Timer timer = new Timer(1000, actListner);
 
+    //allows the student to view the passage
     public void viewPassage() {
 
         pframe.setVisible(true);
@@ -145,9 +139,11 @@ public class Student extends User implements ActionListener {
 
     }
 
+    //does nothing, but replaced by answerSMS(int)
     public void answerSMS() {
     }
 
+    //displays specific sms message
     public void answerSMS(int line) {
         passframe.setVisible(false);
         SMS s = null;
@@ -176,7 +172,50 @@ public class Student extends User implements ActionListener {
 
     }
 
+    //updates student entry with Time.
+    public void updateStudent()
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            //Register JDBC driver
+            Class.forName(JDBC_DRIVER);
 
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String sql;
+
+            Time t = new Time(count);
+            System.out.println(t);
+            sql = "Update Student_Table SET TimePassage = '"+t+"' WHERE StudentID = " + this.idNumber;
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+            viewPassage();
+        } catch (SQLException se) {
+
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException se2) {
+            }// nothing we can do
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+    }
+
+    //displays questions from the quiz using "curr" to keep track of which question to display.
     public void answerQuiz() {
         qframe.setLocationRelativeTo(null);
         qframe.pack();
@@ -225,13 +264,15 @@ public class Student extends User implements ActionListener {
         //displays passage
         if (e.getActionCommand().equals("Read Passage")) {
             Passage p = new Passage(this.passage);
+            passagePanel.setLayout(new BoxLayout(passagePanel, BoxLayout.Y_AXIS));
             sms = p.getSMSList();
             pframe.dispose();
             passframe.setVisible(true);
-            passframe.setSize(1000, 1000);
             passframe.add(passagePanel);
+            passframe.setSize(500, 500);
             takeQuiz.addActionListener(this);
             passagePanel.add(takeQuiz);
+            takeQuiz.setVisible(false);
             JTextArea passage = new JTextArea(5, 20);
 
 
@@ -241,9 +282,10 @@ public class Student extends User implements ActionListener {
             passage.setLineWrap(true);
             passage.setWrapStyleWord(true);
             passagePanel.setLayout(new BoxLayout(passagePanel, BoxLayout.Y_AXIS));
-            JLabel title = new JLabel("An Overview of Psychological Disorders");
+            JLabel title = new JLabel("An Overview of Personality Disorders");
             passagePanel.add(title);
-            passagePanel.add(passage);
+
+            timer.start();
 
             scroll = new JScrollPane(passage);
 
@@ -283,33 +325,36 @@ public class Student extends User implements ActionListener {
                         answerSMS(40);
 
 
-                    else if (scroll.getVerticalScrollBar().getValue() >= 2110 && scroll.getVerticalScrollBar().getValue() <= 2120)
+                    else if (scroll.getVerticalScrollBar().getValue() >= 2110 && scroll.getVerticalScrollBar().getValue() <= 2120) {
                         answerSMS(50);
+                        takeQuiz.setVisible(true);
 
-
+                    }
                     else
                     {}
 
 
                 }
             });
+            passagePanel.add(scroll);
 
 
-        } else if (e.getActionCommand().equals("Submit")) {
+        }
+        //submits student answers to questions
+        else if (e.getActionCommand().equals("Submit")) {
             qframe.dispose();
             for (int i = 0; i < answers.size(); i++) {
                 if (buttons[i].isSelected()) {
                     if (answers.get(i).getType() != 0)
-                        questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), answers.get(i).getAnswer());
+                        questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), answers.get(i).getAnswer(),answers.get(i).getAnswerID());
                     else
-                        questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), tf.getText());
+                        questions.get(curr).submit(this.idNumber, questions.get(curr).getQuestionID(), tf.getText(),answers.get(i).getAnswerID());
 
 
                     break;
                 }
             }
             curr++;
-            JOptionPane.showMessageDialog(qframe, "Answers Submitted!", "Confirmation", JOptionPane.PLAIN_MESSAGE);
             tf.setText("");
 
             if (curr < numQuestions)
@@ -317,21 +362,17 @@ public class Student extends User implements ActionListener {
             else {
                 JOptionPane.showMessageDialog(qframe, "Quiz Completed!");
                 timer.stop();
+                updateStudent();
                 System.exit(0);
             }
-        } else if (e.getActionCommand().equals("Take quiz")) {
-
+        }
+        //student can view the quiz.
+        else if (e.getActionCommand().equals("Take quiz")) {
 
             this.finishedReading = true;
             //update time here//
             passframe.dispose();
             answerQuiz();
-
-
-
-            timer.start();
-
-
 
         }
 

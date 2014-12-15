@@ -3,15 +3,16 @@ import java.util.ArrayList;
 public class Passage
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     private int passageID;
-    private int lineNum;
     private boolean saved;
     String passage;
     ArrayList<SMS> smsList = new ArrayList<SMS>();
+
+    //retrieves passage and associated SMS messages.
     public Passage( int passageID)
     {
         this.passageID = passageID;
@@ -26,7 +27,7 @@ public class Passage
             stmt = conn.createStatement();
             String sql;
 
-            //Quiz Table
+            //Passage_Table
             sql = "SELECT Passage FROM Passage_Table WHERE PassageID =" + this.passageID;
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -69,12 +70,14 @@ public class Passage
         }//end try
     
     }
-    
+
+    //returns passage content
     public String viewPassage()
     {
         return passage;
     }
-    
+
+    //updates the passage content.
     public void editPassage(String passage)
     {
       this.passage = passage;
@@ -82,13 +85,16 @@ public class Passage
        
     }
 
+    //returns passageID
     public int getPassageID()
     {return passageID;
     }
 
+    //returns arraylist of SMS associated with this passage.
     public ArrayList<SMS> getSMSList()
     {return smsList;}
 
+    //saves any changes to the database.
     public void save()
     {
         if(!saved)

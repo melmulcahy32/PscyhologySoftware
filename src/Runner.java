@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
  */
 public class Runner{
     static JFrame mainFrame = new JFrame("Welcome");
+    //displays the welcome screen.
     public static void startup()
     {
         ActionListener listener = new ActionListener() {
@@ -34,7 +35,9 @@ public class Runner{
         mainFrame.setLocationRelativeTo(null);
         mainFrame.pack();
         mainFrame.setSize(500,500);
+        JLabel label = new JLabel("Welcome!");
         JPanel mainPanel = new JPanel();
+        mainPanel.add(label);
         JButton takeSurvey = new JButton("Take Survey");
         JButton login = new JButton("Login");
         takeSurvey.addActionListener(listener);

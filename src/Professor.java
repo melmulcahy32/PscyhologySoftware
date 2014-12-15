@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class Professor extends User implements ActionListener
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     JFrame frame = new JFrame("Answer Quiz");
     JFrame frame1 = new JFrame("Answer SMS");
@@ -95,7 +95,7 @@ public class Professor extends User implements ActionListener
     boolean loggedin = false;
     boolean savedSettings = false;
 
-    //SMS sms = new SMS();
+    //prompts for login
     public Professor ()
     {
         login = new JFrame("Log In");
@@ -129,22 +129,27 @@ public class Professor extends User implements ActionListener
 
         login.setVisible(true);
     }
+    //changes the username of the professor
     public void editUsername(String username)
     {
         this.newUsername = username;
         save();
     }
 
+    //edits the password for professor
     public void editPassword(String password)
     {
         this.password = password;
         save();
     }
+
+    //does nothing
     public void viewPassage()
     {
 
     }
 
+    //displays the dashboard for the professor.
     public void viewDashboard() {
         frame6.setVisible(true);
         frame6.setSize(500, 200);
@@ -173,6 +178,7 @@ public class Professor extends User implements ActionListener
         button6.addActionListener(this);
     }
 
+    //checks to see if inputted user/pass is in the database and is correct.
     public void login(String user, String pass)
     {
         Connection conn = null;
@@ -230,6 +236,7 @@ public class Professor extends User implements ActionListener
         }//end try
     }
 
+    //logs out the professor and returns the user to the welcome screen.
     public void logout()
     {
 
@@ -244,6 +251,7 @@ public class Professor extends User implements ActionListener
         Runner.mainFrame.setVisible(true);
     }
 
+    //allows the professor to edit questions related to the quiz.
     public void editQuiz()
     {
         panel2.removeAll();
@@ -281,6 +289,8 @@ public class Professor extends User implements ActionListener
         panel2.add(button4);
         frame2.setVisible(true);
     }
+
+    //allows the professor to edit questions.
     public void editQuestion(Question q)
     {
         currQuestion = q;
@@ -322,6 +332,7 @@ public class Professor extends User implements ActionListener
 
     }
 
+    //allows the professor to edit the passage.
     public void editPassage(int passage)
     {
         panel3.removeAll();
@@ -350,6 +361,7 @@ public class Professor extends User implements ActionListener
 
     }
 
+    //allows the professor to edit SMS messages.
     public void editSMS()
     {
         ArrayList<Integer> passNums = new ArrayList<Integer>();
@@ -410,6 +422,7 @@ public class Professor extends User implements ActionListener
         }//end try
     }
 
+    //allows the professor to select which passage's sms to change.
     public void editPassSMS(int passNum)
     {
         p = new Passage(passNum);
@@ -441,6 +454,7 @@ public class Professor extends User implements ActionListener
         editSMSs.setVisible(true);
     }
 
+    //edits the actual content of the SMS
     public void editSMSMessage(SMS s)
     {
         sm = s;
@@ -466,6 +480,8 @@ public class Professor extends User implements ActionListener
         editSMSs.setVisible(true);
 
     }
+
+    //allows the user to edit their settings
     public void editUserSettings()
     {
         frame7.setLocationRelativeTo(null);
@@ -482,12 +498,14 @@ public class Professor extends User implements ActionListener
         frame7.setVisible(true);
     }
 
+    //does nothing
     public void answerSMS()
     {
       
 
     }
 
+    //would allow the professor to preview the quiz. Does nothing really.
     public void answerQuiz()
     {
         frame.setLocationRelativeTo(null);
@@ -500,6 +518,7 @@ public class Professor extends User implements ActionListener
         frame.setVisible(true); 
     }
 
+    //saves changes to user settings.
     public void save()
     {
         Connection conn = null;
@@ -540,6 +559,7 @@ public class Professor extends User implements ActionListener
 
     }
 
+    //Choose passage number.
     public void choosePassage()
     {
         ArrayList<Integer> passNums = new ArrayList<Integer>();

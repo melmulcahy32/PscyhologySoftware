@@ -3,15 +3,17 @@ import java.sql.*;
 public class SMS
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     private int line;
     private String message;
     private boolean smsAnswered = false;
     private boolean saved = true;
     private int smsID;
+
+    //retrives specific SMS from database
     public SMS(int smsid)
     {
         this.smsID = smsid;
@@ -62,6 +64,7 @@ public class SMS
         }//end try
     }
 
+    //creates a new SMS in the database.
     public SMS(int smsid, String message, int line, int passage)
     {
         this.smsID = smsid;
@@ -107,6 +110,7 @@ public class SMS
         }//end try
     }
 
+    //stores student's responses into the database.
     public void submit(int studID, Time time, String response)
     {
         if(smsAnswered == false) {
@@ -152,6 +156,7 @@ public class SMS
         }
     }
 
+    //saves professor's changes to the database.
     public void save()
     {
         if(saved == false)
@@ -198,11 +203,13 @@ public class SMS
         }
     }
 
+    //returns message
     public String getMessage()
     {
         return message;
     }
 
+    //allows the professor to edit the SMS's message and line num.
     public void editSMS(String message, int line)
     {
         this.message = message;
@@ -210,14 +217,10 @@ public class SMS
         saved = false;
     }
 
+    //returns line number.
     public int getLine()
     {
         return line;
     }
 
-    public String toString()
-    {
-        String s = message + line;
-        return s;
-    }
 }

@@ -6,9 +6,9 @@ import java.util.Scanner;
 
 public class Quiz {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
 
     private String answerkey;
     private ArrayList<Question> questions = new ArrayList<Question>();
@@ -16,7 +16,7 @@ public class Quiz {
     private boolean submitted = false;
     private boolean saved = false;
 
-    //creates a Quiz object
+    //retrives quiz from database.
     public Quiz()
     {
         Connection conn = null;
@@ -82,6 +82,7 @@ public class Quiz {
         q.editQuestion(question);
     }
 
+    //adds new question to the quiz
     public void addQuestion(String question)
     {
         int quesID;
@@ -93,6 +94,7 @@ public class Quiz {
         questions.add(q);
     }
 
+    //removes question from the quiz.
     public void deleteQuestion(int choice)
     {
         Question q = questions.get(choice);
@@ -248,11 +250,6 @@ public class Quiz {
             }//end try
             saved = true;
         }
-    }
-
-    public String toString()
-    {
-        return "QuizID: " + quizID + " AnswerKey: " + answerkey + "Question 1: "+ questions.get(0);
     }
 
 

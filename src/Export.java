@@ -1,18 +1,17 @@
 import java.sql.*;
-import java.util.Scanner;
 import java.io.*;
 public class Export
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
-
+    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
+    static final String USER = "root";
+    static final String PASS = "";
     public Export()
     {
     
     }
-    
+
+    //creates an .xls file with all student information from the database.
     public void export()
     {
         try {
@@ -28,7 +27,7 @@ public class Export
                 stmt = conn.createStatement();
                 String sql;
 
-                //Quiz Table
+                //Student_Table, returns passage time.
                 sql = "SELECT StudentID, PassageNum, TimePassage FROM Student_Table";
                 ResultSet rs = stmt.executeQuery(sql);
 
@@ -38,6 +37,7 @@ public class Export
                     out.println("" + rs.getInt("StudentID") + "\t" + rs.getInt("PassageNum") + "\t" + rs.getTime("TimePassage"));
                 }
 
+                //Exports student answers from StudentAnswer_Table
                 sql = "SELECT StudID, QuestionID, Answer FROM StudentAnswer_Table";
                 rs = stmt.executeQuery(sql);
                 out.println("Student Answers to Quiz");
@@ -48,6 +48,7 @@ public class Export
 
                 out.println("Student SMS Responses");
 
+                //Exports sms answers from StudentSMS_Table
                 sql = "SELECT StudID, SMSID, SMSTime, Response FROM StudentSMS_Table";
                 rs = stmt.executeQuery(sql);
 
