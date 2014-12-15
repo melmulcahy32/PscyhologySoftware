@@ -21,6 +21,7 @@ public class Student extends User implements ActionListener {
     Time time;
     int idNumber;
     private static int count = 0;
+    private static int countSMS = 0;
     boolean finishedReading = false;
 
     JFrame pframe = new JFrame("Start Passage");
@@ -143,15 +144,30 @@ public class Student extends User implements ActionListener {
             int l = sms.get(i).getLine();
             if (l == line) {
                 s = sms.get(i);
+                break;
+            }
+        }
+        ActionListener actListner = new ActionListener() {
 
+
+
+            @Override
+
+
+
+            public void actionPerformed(ActionEvent event) {countSMS += 1;
             }
 
-        }
 
+        };
+        Timer timerSMS = new Timer(1000, actListner);
+
+        timerSMS.start();
         if (!(s == null)) {
             String input = JOptionPane.showInputDialog(null, "" + s.getMessage());
-            Time t = new Time(0); //has to be in milliseconds
+            Time t = new Time(countSMS); //has to be in milliseconds
             s.submit(this.idNumber, t, input);
+            timerSMS.stop();
 
 
 
@@ -336,8 +352,6 @@ public class Student extends User implements ActionListener {
                 answerQuiz();
             else {
                 JOptionPane.showMessageDialog(qframe, "Quiz Completed!");
-                timer.stop();
-                updateStudent();
                 System.exit(0);
             }
         }
@@ -347,6 +361,8 @@ public class Student extends User implements ActionListener {
             this.finishedReading = true;
             //update time here//
             passframe.dispose();
+            timer.stop();
+            updateStudent();
             answerQuiz();
 
         }
