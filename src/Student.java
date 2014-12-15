@@ -57,6 +57,7 @@ public class Student extends User implements ActionListener {
         this.passage = passageNum;
         numPass = passageNum;
 
+
         Connection conn = null;
         Statement stmt = null;
         try {
@@ -271,6 +272,15 @@ public class Student extends User implements ActionListener {
 
         //displays passage
         if (e.getActionCommand().equals("Read Passage")) {
+            if(numPass==2)
+            {
+                answerSMS(10);
+                answerSMS(20);
+                answerSMS(30);
+                answerSMS(40);
+                answerSMS(50);
+
+            }
             Passage p = new Passage(this.passage);
             passagePanel.setLayout(new BoxLayout(passagePanel, BoxLayout.Y_AXIS));
             sms = p.getSMSList();
