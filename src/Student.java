@@ -5,14 +5,10 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 
-import java.awt.BorderLayout;  
 import java.awt.event.*;
 import javax.swing.Timer;
-import javax.swing.text.DefaultCaret;
 
-/**
- * Created by melmulcahy on 11/9/14.
- */
+
 public class Student extends User implements ActionListener {
 
 
@@ -21,18 +17,14 @@ public class Student extends User implements ActionListener {
     static final String USER = "root";
     static final String PASS = "";
 
-    ArrayList timeSMS = new ArrayList();
     int passage;
     Time time;
     int idNumber;
     private static int count = 0;
     boolean finishedReading = false;
-    boolean answeredQuestion = false;
-    boolean answeredSMS = false;
 
     JFrame pframe = new JFrame("Start Passage");
     JFrame qframe = new JFrame("answerQuiz");
-    JFrame sframe = new JFrame("answerSMS");
     JFrame passframe = new JFrame("Passage");
 
     JScrollPane scroll;
@@ -289,49 +281,32 @@ public class Student extends User implements ActionListener {
 
             scroll = new JScrollPane(passage);
 
-           passage.setCaretPosition(0);
-
-
-
+            passage.setCaretPosition(0);
             scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             passagePanel.add(scroll);
-
             scroll.setVisible(true);
-
-
-
             scroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
 
                 @Override
                 public void adjustmentValueChanged(AdjustmentEvent e) {
 
-
                     if (scroll.getVerticalScrollBar().getValue() >= 208 && scroll.getVerticalScrollBar().getValue() <= 218)
-
                         answerSMS(10);
-
-
-
                     else if (scroll.getVerticalScrollBar().getValue() >= 740 && scroll.getVerticalScrollBar().getValue() <= 750)
                         answerSMS(20);
-
                    else if (scroll.getVerticalScrollBar().getValue() >= 1250 && scroll.getVerticalScrollBar().getValue() <= 1260)
                         answerSMS(30);
-
-
-
                    else if (scroll.getVerticalScrollBar().getValue() >= 1710 && scroll.getVerticalScrollBar().getValue() <= 1720)
                         answerSMS(40);
-
-
                     else if (scroll.getVerticalScrollBar().getValue() >= 2110 && scroll.getVerticalScrollBar().getValue() <= 2120) {
                         answerSMS(50);
-                        takeQuiz.setVisible(true);
-
                     }
                     else
-                    {}
+                    {
+                        if(scroll.getVerticalScrollBar().getValue() > 2120)
+                            takeQuiz.setVisible(true);
+                    }
 
 
                 }
