@@ -43,7 +43,7 @@ public class Export
                 out.println("Student Answers to Quiz");
                 out.println("StudID\tQuestionID\tAnswer");
                 while (rs.next()) {
-                    out.println("" + rs.getInt("StudID") + "\t" + rs.getInt("QuestionID") + "\t" + rs.getInt("Answer"));
+                    out.println("" + rs.getInt("StudID") + "\t" + rs.getInt("QuestionID") + "\t" + rs.getString("Answer"));
                 }
 
                 out.println("Student SMS Responses");

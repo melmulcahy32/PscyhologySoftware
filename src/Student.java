@@ -279,7 +279,6 @@ public class Student extends User implements ActionListener {
                 answerSMS(30);
                 answerSMS(40);
                 answerSMS(50);
-
             }
             Passage p = new Passage(this.passage);
             passagePanel.setLayout(new BoxLayout(passagePanel, BoxLayout.Y_AXIS));
