@@ -6,11 +6,11 @@ import java.sql.*;
 public class DatabaseExample {
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://sql2.freemysqlhosting.net/sql260287";
+    static final String DB_URL = "jdbc:mysql://psychology-project.c8gnizp6tgr7.us-east-1.rds.amazonaws.com/Psychology_Software";
 
     //  Database credentials
-    static final String USER = "sql260287";
-    static final String PASS = "uE6!gF6*";
+    static final String USER = "username";
+    static final String PASS = "password1";
 
     public static void main(String[] args) {
         Connection conn = null;
