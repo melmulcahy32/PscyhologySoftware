@@ -8,9 +8,11 @@ import java.util.ArrayList;
 public class Professor extends User implements ActionListener
 {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://psychology-project.c8gnizp6tgr7.us-east-1.rds.amazonaws.com/Psychology_Software";
+
+    //  Database credentials
+    static final String USER = "username";
+    static final String PASS = "password1";
 
     JFrame frame = new JFrame("Answer Quiz");
     JFrame frame1 = new JFrame("Answer SMS");

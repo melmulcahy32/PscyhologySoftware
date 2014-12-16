@@ -13,9 +13,11 @@ public class Student extends User implements ActionListener {
 
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/Psychology_Software";
-    static final String USER = "root";
-    static final String PASS = "";
+    static final String DB_URL = "jdbc:mysql://psychology-project.c8gnizp6tgr7.us-east-1.rds.amazonaws.com/Psychology_Software";
+
+    //  Database credentials
+    static final String USER = "username";
+    static final String PASS = "password1";
 
     int passage;
     Time time;
@@ -272,7 +274,7 @@ public class Student extends User implements ActionListener {
 
         //displays passage
         if (e.getActionCommand().equals("Read Passage")) {
-            if(numPass==2)
+            if(numPass==1)
             {
                 answerSMS(10);
                 answerSMS(20);
@@ -310,6 +312,7 @@ public class Student extends User implements ActionListener {
             scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
             passagePanel.add(scroll);
             scroll.setVisible(true);
+            if(numPass == 3 || numPass == 4)
             scroll.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
 
@@ -329,7 +332,7 @@ public class Student extends User implements ActionListener {
                     }
                     else
                     {
-                        if(scroll.getVerticalScrollBar().getValue() > 2120)
+                        if(scroll.getVerticalScrollBar().getValue() > scroll.getVerticalScrollBar().getMaximum()-100)
                             takeQuiz.setVisible(true);
                     }
 
